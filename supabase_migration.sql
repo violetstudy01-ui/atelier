@@ -1,0 +1,3 @@
+-- Apply the SQL files in supabase/migrations/ in filename order.
+-- Do not run this placeholder file as a database migration.
+-- See README.md for setup instructions.

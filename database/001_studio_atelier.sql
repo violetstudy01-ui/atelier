@@ -1,0 +1,3 @@
+-- The authoritative database migrations are in ../supabase/migrations/.
+-- Apply every migration there in filename order to a fresh Supabase project.
+-- See README.md for setup instructions.
