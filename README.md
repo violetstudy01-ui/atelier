@@ -1,97 +1,178 @@
-# Studio Atelier
+# Studio Atelier 🎨
 
-A student art-studio website for browsing paintings, requesting wall painting, and ordering custom pottery.
+Studio Atelier is a full-stack art studio website where customers can explore and purchase paintings, book wall-painting services, and request custom pottery. It also includes a **“See It on Your Wall”** feature to preview artwork in a room setting.
 
-## Features
+## 🌐 Live Demo
 
-- Painting gallery with local artwork images and search/sorting
-- “See It on Your Wall” room preview
-- Customer email/password sign-in
-- Painting orders, wall bookings, and pottery requests
-- Customer dashboard and admin decision screens
-- Supabase database policies for record access and business rules
+**Website:** https://atelier-mu-beige.vercel.app
 
-## Technology
+## ✨ Features
 
-- React + JavaScript + Vite
-- Supabase Auth and PostgreSQL
-- A small Express health endpoint in `server/index.js`
+- **Painting Gallery:** Browse available paintings from the studio.
+- **See It on Your Wall:** Preview how artwork could look in a room setting.
+- **User Authentication:** Sign up and sign in using email and password.
+- **Painting Orders:** Place orders for available paintings.
+- **Wall Painting Bookings:** Request a booking by selecting a date, wall size, and address.
+- **Custom Pottery Requests:** Select a pottery item, glaze, quantity, and required date.
+- **Customer Dashboard:** View your own orders, bookings, and pottery requests.
+- **Studio Administration:** Manage paintings and review wall bookings and pottery requests.
 
-**Architecture note:** The current React application reads and writes its business data directly through the Supabase JavaScript client. The Express server currently provides only a `/health` endpoint; it is not the API handling orders or bookings. For the simplest deployment, host the React frontend and use Supabase for authentication/database. Deploy Express separately only if you need its health endpoint.
+*Note: This is a demonstration project and does not process real payments.*
 
-## 1. Local setup
+## 🛠️ Tech Stack
 
-Requirements: Node.js 18 or newer.
+- **Frontend:** React, JavaScript, Vite, CSS
+- **Authentication:** Supabase Auth
+- **Database:** Supabase PostgreSQL
+- **Database Security:** Row Level Security (RLS)
+- **Deployment:** Vercel
+- **Additional Backend:** Express.js health-check endpoint
 
-1. Copy `.env.example` to `.env`.
-2. Fill in the Supabase project URL and publishable/anon key.
-3. Install dependencies: `npm install`.
-4. Start the frontend: `npm run dev`.
-5. Open the local URL printed by Vite.
+The React frontend uses the Supabase JavaScript client for authentication and database operations. The Express service provides a health-check endpoint.
 
-To run the optional Express health endpoint in another terminal:
+## 🚀 Getting Started
+
+Follow these steps to run the project locally.
+
+### Prerequisites
+
+- Node.js 18 or newer
+- npm
+- A Supabase account and project
+
+### 1. Clone the Repository
 
 ```bash
-node server/index.js
+git clone https://github.com/violetstudy01-ui/atelier.git
+cd atelier
 ```
 
-It responds at `/health` on port `3001` by default.
+If the project is inside a subdirectory, navigate to the directory containing `package.json`.
 
-## 2. Supabase database setup
+### 2. Install Dependencies
 
-1. Create or open your Supabase project.
-2. Open **SQL Editor** in the Supabase dashboard.
-3. Apply every SQL file in `supabase/migrations/` in filename order, starting with the earliest timestamp.
-4. Check that the tables and policies were created.
-5. Register a normal customer account through the website.
-6. In Supabase **Table Editor → profiles**, change that user's `role` from `customer` to `admin` to grant studio-admin access.
+```bash
+npm install
+```
 
-There is no public admin registration page. Never put an admin password or a service-role/secret key in frontend code or GitHub.
+### 3. Configure Environment Variables
 
-The seed migration adds the painting gallery and the pottery/glaze reference data. The image assets are in `public/`.
+Create a `.env` file in the project root:
 
-If the Supabase project already has these migrations applied, do not run them blindly again. Check the existing schema and migration history first.
+```bash
+cp .env.example .env
+```
 
-## 3. Environment variables
+Add your Supabase project details:
 
-`.env.example` lists the only frontend variables expected by this project:
+```env
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-publishable-or-anon-key
+```
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+Replace the placeholder values with the Project URL and publishable key from your Supabase dashboard. You can also use the legacy `anon public` key.
 
-These values are used by the browser client. The anon/publishable key is designed for browser use only when database Row Level Security is correctly configured. Never expose a Supabase service-role key.
+The frontend expects the API key in the `VITE_SUPABASE_ANON_KEY` variable.
 
-For Vercel, add the same `VITE_` variables in **Project Settings → Environment Variables**, then redeploy.
+**Security:** Never put your Supabase `service_role` or secret key in frontend code or commit your `.env` file to GitHub.
 
-## 4. Deploy the website
+### 4. Set Up the Database
 
-### Frontend (recommended simple route: Vercel)
+1. Open your Supabase project.
+2. Navigate to **SQL Editor**.
+3. Apply the required database schema, seed data, and Row Level Security policies.
+4. Verify that the required tables and policies exist before running the application.
 
-1. Push this project to GitHub.
-2. Import the repository into Vercel.
-3. Set the Root Directory to the folder containing this `package.json` (usually `project` if you keep the outer ZIP folder structure; preferably upload the contents of this folder as the repository root).
-4. Build command: `npm run build`.
-5. Output directory: `dist`.
-6. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Vercel Environment Variables.
-7. Deploy and test sign-in, gallery, and a sample workflow.
+If the database has already been configured, do not rerun the SQL scripts blindly.
 
-This is a Vite single-page app. If refreshing a nested URL returns 404, configure SPA rewrites in the hosting provider.
+### 5. Run the Development Server
 
-### Optional Express health service
+```bash
+npm run dev
+```
 
-The app's business flows do not currently depend on Express. If you choose to deploy the health service, create a Node web service using this repository, set its service root to the directory containing `server/index.js` and `package.json`, and use `node server/index.js` as the start command. The service exposes `/health`.
+Open the local URL displayed in your terminal.
 
-## 5. Before submitting
+### Useful Commands
 
-- Verify login and logout.
-- Verify customer and admin access separately.
-- Verify painting orders and cancellation.
-- Verify wall booking date and size validation.
-- Verify pottery request status changes.
-- Confirm records persist after a refresh.
-- Never commit `.env`, passwords, or secret keys.
-- Include the GitHub repository and deployed website URLs in your submission.
+```bash
+npm run build
+npm run preview
+npm run lint
+```
 
-## Scope
+Run only commands that are defined in the project's `package.json`.
 
-Real payments, uploads, notifications, delivery tracking, and reviews are not implemented.
+## ☁️ Deployment
+
+The project is deployed using Vercel.
+
+To deploy your own copy:
+
+1. Import the GitHub repository into Vercel.
+2. Select **Vite** as the framework preset.
+3. Set the Root Directory to the directory containing `package.json`.
+4. Configure the build command as `npm run build`.
+5. Set the output directory to `dist`.
+6. Add the following environment variables in **Settings → Environment Variables**:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+7. Deploy the project and verify the application.
+
+Ensure that the environment variables point to the same Supabase project where the database schema and authentication are configured.
+
+## 👥 User Roles
+
+### Customer
+- Browse available paintings.
+- Place painting orders.
+- Request wall-painting bookings.
+- Submit custom pottery requests.
+- View and manage their own orders and requests.
+
+### Studio Admin
+- Browse paintings.
+- Add or edit available paintings.
+- View customer orders, bookings, and pottery requests.
+- Confirm or decline wall bookings.
+- Accept or decline pottery requests.
+
+Access permissions should be enforced through database policies and appropriate application logic. Admin access should not be available through public sign-up.
+
+## 📌 Scope and Limitations
+
+The project focuses on the core art studio workflow. The following features are outside the current project scope:
+
+- Real payment processing
+- Password reset and email verification
+- Social login
+- Public studio-admin registration
+- Artwork image uploads
+- Reviews and coupons
+- Delivery tracking
+- Email and SMS notifications
+
+## ✅ Testing Checklist
+
+Before submitting the project, verify:
+
+- User registration and login
+- Painting availability and order creation
+- Wall booking date and wall-size validation
+- Custom pottery request creation
+- Customer cancellation and ownership restrictions
+- Studio-admin approval and rejection workflows
+- Correct database access permissions
+- Environment variables and deployment configuration
+
+## 🔮 Future Improvements
+
+- Add automated tests for important user workflows.
+- Improve accessibility and responsive design.
+- Add artwork image uploads.
+- Introduce email notifications for booking updates.
+- Improve error handling and user feedback.
+
+---
+
+**Studio Atelier** — Bringing art into everyday spaces.
